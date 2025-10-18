@@ -19,6 +19,10 @@ cd vue-tsoa-mongodb-template
 ```
 
 ```bash
+npm run setup
+```
+
+```bash
 docker-compose -f etc/docker-compose.yml up --build -d
 ```
 
