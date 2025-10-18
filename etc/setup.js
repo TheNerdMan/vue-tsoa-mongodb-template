@@ -77,7 +77,7 @@ function replaceInFile(filePath, searchValue, replaceValue) {
   }
 }
 
-function updateProjectFiles(projectName, projectDisplayName) {
+function updateProjectFiles(projectName, projectDisplayName, projectTagLine, leadDeveloperName, leadDeveloperEmail) {
   const rootDir = path.resolve(__dirname, '..');
   const updates = [];
   
@@ -86,30 +86,31 @@ function updateProjectFiles(projectName, projectDisplayName) {
   // Files to update with their relative paths
   const filesToUpdate = [
     // Root files
-    'package.json',
-    'README.md',
-    
+    "package.json",
+    "README.md",
+
     // Backend files
-    'backend/package.json',
-    'backend/README.md',
-    'backend/.env.template',
-    'backend/tsoa.json',
-    
+    "backend/package.json",
+    "backend/README.md",
+    "backend/.env.template",
+    "backend/tsoa.json",
+
     // Frontend files
-    'frontend/package.json',
-    'frontend/README.md',
-    'frontend/.gitignore',
-    'frontend/tsconfig.app.json',
-    'frontend/vite.config.ts',
-    'frontend/src/core/http.ts',
-    'frontend/src/components/AdminLogin/AdminLogin.vue',
-    'frontend/src/components/AdminLogin/AdminLogin.test.ts',
-    
+    "frontend/package.json",
+    "frontend/README.md",
+    "frontend/src/components/AdminLogin/AdminLogin.vue",
+    "frontend/.gitignore",
+    "frontend/tsconfig.app.json",
+    "frontend/vite.config.ts",
+    "frontend/src/core/http.ts",
+    "frontend/src/components/AdminLogin/AdminLogin.vue",
+    "frontend/src/components/AdminLogin/AdminLogin.test.ts",
+
     // Docker compose files
-    'etc/docker-compose.db.yml',
-    'etc/docker-compose.dev.yml',
-    'etc/docker-compose.prod.yml',
-    'etc/docker-compose.test.yml'
+    "etc/docker-compose.db.yml",
+    "etc/docker-compose.dev.yml",
+    "etc/docker-compose.prod.yml",
+    "etc/docker-compose.test.yml",
   ];
   
   // Update template name references
@@ -132,6 +133,23 @@ function updateProjectFiles(projectName, projectDisplayName) {
       updated = true;
     }
     
+    // Replace tag line
+    if (replaceInFile(filePath, 'A Vue TSOA MongoDB Application', projectTagLine)) {
+      updated = true;
+    }
+
+    if (leadDeveloperName) {
+      if (replaceInFile(filePath, 'Lead Developer', leadDeveloperName)) {
+        updated = true;
+      }
+    }
+    
+    if (leadDeveloperEmail) {
+      if (replaceInFile(filePath, 'lead.developer@example.com', leadDeveloperEmail)) {
+        updated = true;
+      }
+    }
+
     if (updated) {
       updates.push(file);
       log(`  ✓ Updated ${file}`, 'green');
@@ -249,6 +267,35 @@ async function promptDisplayName(projectName) {
   });
 }
 
+async function promptTagLine(projectName) {
+  return new Promise((resolve) => {
+    const defaultTagLine = `${projectName} - A Vue TSOA MongoDB Application`;
+
+    rl.question(
+      `Enter tag line for your project (default: "${defaultTagLine}"): `,
+      (answer) => {
+        resolve(answer.trim() || defaultTagLine);
+      }
+    );
+  });
+}
+
+async function promptLeadDeveloperName() {
+  return new Promise((resolve) => {
+    rl.question('Enter lead developer name (optional): ', (answer) => {
+      resolve(answer.trim());
+    });
+  });
+}
+
+async function promptLeadDeveloperEmail() {
+  return new Promise((resolve) => {
+    rl.question('Enter lead developer email (optional): ', (answer) => {
+      resolve(answer.trim());
+    });
+  });
+}
+
 async function main() {
   log('🚀 Vue TSOA MongoDB Template Setup', 'bright');
   log('=====================================', 'bright');
@@ -260,12 +307,24 @@ async function main() {
     
     // Get display name
     const projectDisplayName = await promptDisplayName(projectName);
-    
+
+    // Get tag line
+    const projectTagLine = await promptTagLine(projectName);
+
+    // Get lead developer name
+    const leadDeveloperName = await promptLeadDeveloperName();
+
+    // Get lead developer email
+    const leadDeveloperEmail = await promptLeadDeveloperEmail();
+
     // Confirm settings
     log('\n📋 Configuration:', 'bright');
     log(`   Project name: ${projectName}`, 'cyan');
     log(`   Display name: ${projectDisplayName}`, 'cyan');
-    
+    log(`   Tag line: ${projectTagLine}`, 'cyan');
+    log(`   Lead developer name: ${leadDeveloperName}`, 'cyan');
+    log(`   Lead developer email: ${leadDeveloperEmail}`, 'cyan');
+
     const shouldContinue = await new Promise((resolve) => {
       rl.question('\nContinue with setup? (y/N): ', (answer) => {
         resolve(answer.toLowerCase().startsWith('y'));
@@ -279,7 +338,7 @@ async function main() {
     }
     
     // Update files
-    const updates = updateProjectFiles(projectName, projectDisplayName);
+    const updates = updateProjectFiles(projectName, projectDisplayName, projectTagLine, leadDeveloperName, leadDeveloperEmail);
     
     updates.push(runNpmScripts());
 

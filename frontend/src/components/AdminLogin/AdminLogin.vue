@@ -12,9 +12,9 @@
         </div>
         <h1
           class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
-          Memory Soup
+          Vue TSOA MongoDB Template
         </h1>
-        <p class="text-gray-600 text-sm">Share your precious moments</p>
+        <p class="text-gray-600 text-sm">A Vue TSOA MongoDB Application</p>
       </div>
 
       <!-- Login Card -->
@@ -25,7 +25,7 @@
             {{ isSignUp ? 'Create Account' : 'Welcome Back' }}
           </h2>
           <p class="text-gray-600 text-sm">
-            {{ isSignUp ? 'Join us to start sharing memories' : 'Sign in to your admin account' }}
+            {{ isSignUp ? 'Create your account' : 'Sign in to your account' }}
           </p>
         </div>
 
@@ -192,7 +192,7 @@
 import { ref, computed } from 'vue';
 import { z } from 'zod';
 import { setAuthToken } from '@/core/http';
-import { signup, login } from '@vue-tsoa-mongodb-template-api/index';
+import { signup, login } from '@stupid-project-api/index';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 

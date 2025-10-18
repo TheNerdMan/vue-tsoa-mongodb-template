@@ -3,7 +3,7 @@ import AdminLogin from './AdminLogin.vue';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Mock the API functions
-vi.mock('@vue-tsoa-mongodb-template-api/index', () => ({
+vi.mock('@stupid-project-api/index', () => ({
   signup: vi.fn(),
   login: vi.fn(),
 }));
