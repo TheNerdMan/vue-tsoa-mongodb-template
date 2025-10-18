@@ -1,0 +1,40 @@
+version: '3.8'
+name: vue-tsoa-mongodb-template-db
+services:
+
+  mongo:
+    restart: unless-stopped
+    image: mongo:8.0
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - tsoa-mongo
+    expose:
+      - 27017
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    networks:
+      - tsoa-mongo
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    depends_on:
+      - mongo
+
+networks:
+  vue-tsoa:
+  tsoa-mongo:
+
+volumes:
+  mongo_data:

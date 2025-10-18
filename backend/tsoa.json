@@ -1,0 +1,33 @@
+{
+  "entryFile": "src/app.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/**/*.controller.ts"],
+  "spec": {
+    "#### json spec #### this is ignored": "https://tsoa-community.github.io/reference/interfaces/_tsoa_runtime.SpecConfig.html",
+    "outputDirectory": "build",
+    "specVersion": 3,
+    "name": "vue-tsoa-mongodb-template-api",
+    "description": "Backend API for Vue TSOA MongoDB Template",
+    "contact": {
+      "name": "Alex Wilson",
+      "email": "alex.dave999@gmail.com"
+    },
+    "tags": [
+      {
+        "name": "Admin",
+        "description": "Admin endpoints"
+      }
+    ],
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "routes": {
+    "routesDir": "build",
+    "authenticationModule": "src/authentication.ts"
+  }
+}

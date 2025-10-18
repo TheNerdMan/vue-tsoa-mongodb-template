@@ -1,0 +1,82 @@
+version: '3.8'
+name: vue-tsoa-mongodb-template-dev
+services:
+  frontend:
+    image: node:22-alpine
+    working_dir: /usr/src/app
+    ports:
+      - "42000:42000"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../frontend:/usr/src/app:cached
+      - ../frontend/node_modules:/usr/src/app/node_modules:cached
+    restart: unless-stopped
+    networks:
+      - vue-tsoa
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
+      - WATCHPACK_POLLING=true
+    command: sh -c "npm run dev"
+
+  backend:
+    image: node:22-alpine
+    working_dir: /usr/src/app
+    ports:
+      - "42001:42001"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../backend:/usr/src/app:cached
+      - ../backend/node_modules:/usr/src/app/node_modules:cached
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    networks:
+      - tsoa-mongo
+      - vue-tsoa
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
+      - WATCHPACK_POLLING=true
+    command: sh -c "npm run dev"
+
+  mongo:
+    restart: unless-stopped
+    image: mongo:8.0
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - tsoa-mongo
+    expose:
+      - "27017"
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    networks:
+      - tsoa-mongo
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017/
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+    depends_on:
+      - mongo
+
+networks:
+  vue-tsoa:
+  tsoa-mongo:
+
+volumes:
+  mongo_data:

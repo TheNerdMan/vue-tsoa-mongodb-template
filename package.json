@@ -1,0 +1,9 @@
+{
+  "name": "vue-tsoa-mongodb-template",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "node ./etc/setup.js",
+    "dev": "node ./etc/watch.js"
+  }
+}
